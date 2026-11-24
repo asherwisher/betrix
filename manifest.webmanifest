@@ -1,0 +1,17 @@
+{
+  "name": "ODDSENSE Football Intelligence",
+  "short_name": "ODDSENSE",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#101713",
+  "theme_color": "#101713",
+  "description": "European football odds and market analysis dashboard.",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101713">
+  <meta name="description" content="ODDSENSE football odds and match analysis dashboard.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <title>ODDSENSE | Football intelligence</title>
+  <style>
+    :root{color-scheme:dark;--bg:#101713;--panel:#18231d;--panel2:#202e25;--line:#304037;--green:#b7f36b;--muted:#9eada3;--white:#f4f7f2;--amber:#ffc66d;--red:#ff8d80}
+    *{box-sizing:border-box} body{margin:0;background:radial-gradient(ellipse at 80% -10%,#263a2b 0,transparent 40%),var(--bg);color:var(--white);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    button,input,select{font:inherit} button{cursor:pointer}
+    .wrap{max-width:920px;margin:auto;padding:env(safe-area-inset-top) 16px calc(26px + env(safe-area-inset-bottom))}
+    header{display:flex;align-items:center;justify-content:space-between;padding:19px 0 15px;gap:12px}
+    .brand{font-size:23px;font-weight:900;letter-spacing:2px;color:var(--green)} .tag{font-size:9px;color:var(--muted);letter-spacing:1.5px}
+    .actions{display:flex;gap:8px}.iconbtn,.btn{border:1px solid var(--line);background:var(--panel);color:var(--white);border-radius:12px;padding:10px 13px}
+    .btn.primary{background:var(--green);color:#111a12;border:0;font-weight:800}.btn:disabled{opacity:.5}
+    .hero{background:linear-gradient(135deg,#1b2b20,#18231d);border:1px solid var(--line);border-radius:20px;padding:17px;margin:8px 0 15px}
+    .eyebrow{font-size:10px;letter-spacing:1.5px;color:var(--muted);font-weight:700}.hero h1{font-size:25px;line-height:1.15;margin:7px 0}.hero p{margin:7px 0 0;color:var(--muted);font-size:12px;max-width:600px}
+    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0 20px}.metric{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px}.metric small{display:block;color:var(--muted);font-size:9px;letter-spacing:1px}.metric strong{display:block;color:var(--green);font-size:17px;margin:2px 0}.metric span{font-size:9px;color:var(--muted)}
+    .sectionhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 9px}.sectionhead h2{font-size:15px;letter-spacing:.5px;margin:0}.muted{color:var(--muted)}
+    .filters{display:flex;gap:7px;overflow:auto;padding-bottom:7px;scrollbar-width:none}.filters button{white-space:nowrap;border:1px solid var(--line);border-radius:30px;padding:7px 12px;background:var(--panel);color:var(--muted);font-size:11px}.filters button.active{background:var(--green);color:#142015;border-color:var(--green);font-weight:800}
+    .toolbar{display:flex;gap:8px;margin:8px 0 12px}.toolbar input,.field input{width:100%;background:#111b15;border:1px solid var(--line);border-radius:11px;color:var(--white);padding:11px 12px;outline:none}.toolbar input:focus,.field input:focus{border-color:var(--green)}
+    .match{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0}.matchtop,.matchbottom{display:flex;align-items:center;justify-content:space-between;gap:8px}.league{font-size:9px;letter-spacing:1.2px;color:var(--muted);font-weight:800;text-transform:uppercase}.kickoff{font-size:10px;color:var(--muted)}
+    .teams{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:13px 0}.team{font-size:14px;font-weight:750;max-width:42%;overflow-wrap:anywhere}.vs{color:var(--muted);font-size:10px}
+    .odds{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0}.odd{background:var(--panel2);border-radius:9px;padding:9px;text-align:center}.odd small{display:block;color:var(--muted);font-size:9px}.odd b{font-size:15px}
+    .pill{font-size:9px;border-radius:30px;padding:4px 8px;background:#293a2e;color:var(--green);font-weight:800}.pill.warn{background:#403522;color:var(--amber)}.pill.danger{background:#402b29;color:var(--red)}
+    .matchbottom{border-top:1px solid var(--line);padding-top:9px;font-size:10px;color:var(--muted);flex-wrap:wrap}
+    .empty,.notice{border:1px dashed var(--line);border-radius:16px;padding:20px;text-align:center;color:var(--muted);font-size:12px;margin:12px 0}.notice{border-style:solid;text-align:left;line-height:1.5}
+    .notice.good{border-color:#48633d;background:#1c2a1d}.notice.bad{border-color:#76513b;background:#2d241d;color:#ffd6b0}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px;margin:13px 0}.panel h3{margin:0 0 10px;font-size:14px}.field{margin:10px 0}.field label{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.field small{color:var(--muted);font-size:10px}.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}
+    .hidden{display:none!important} .footer{font-size:10px;color:var(--muted);line-height:1.6;margin:22px 2px}
+    dialog{width:min(94vw,520px);max-height:88vh;overflow:auto;background:var(--panel);color:var(--white);border:1px solid var(--line);border-radius:18px;padding:18px}dialog::backdrop{background:#000b}.dialoghead{display:flex;justify-content:space-between;align-items:center}.dialoghead h2{font-size:17px}.close{border:0;background:transparent;color:var(--white);font-size:23px}
+    .statline{display:flex;justify-content:space-between;font-size:11px;padding:5px 0;border-bottom:1px solid var(--line)}.smallprint{font-size:10px;color:var(--muted)}
+    @media(min-width:650px){.matchgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.match{margin:0}.hero h1{font-size:31px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div><div class="brand">ODDSENSE</div><div class="tag">EUROPEAN FOOTBALL INTELLIGENCE</div></div>
+    <div class="actions"><button class="iconbtn" id="refreshBtn" aria-label="Refresh">↻</button><button class="iconbtn" id="settingsBtn">⚙</button></div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">BALANCED ANALYSIS MODE</div>
+    <h1>Bet with data.<br>Not emotions.</h1>
+    <p>Compare market prices, inspect implied probabilities and filter out fixtures with weak or incomplete market information. No guaranteed wins. No forced picks.</p>
+  </section>
+
+  <div class="metrics">
+    <div class="metric"><small>FIXTURES</small><strong id="fixtureCount">—</strong><span>loaded matches</span></div>
+    <div class="metric"><small>DATA STATUS</small><strong id="dataStatus">OFFLINE</strong><span id="updatedAt">Connect provider</span></div>
+    <div class="metric"><small>REFRESH</small><strong>5 MIN</strong><span>while page is open</span></div>
+  </div>
+
+  <div class="sectionhead"><h2>MATCH RADAR</h2><span class="muted" id="resultCount" style="font-size:10px">No data</span></div>
+  <div class="filters" id="leagueFilters">
+    <button class="active" data-league="All">All</button>
+    <button data-league="Premier League">Premier League</button>
+    <button data-league="La Liga">La Liga</button>
+    <button data-league="Bundesliga">Bundesliga</button>
+    <button data-league="Serie A">Serie A</button>
+    <button data-league="Ligue 1">Ligue 1</button>
+    <button data-league="Champions League">Champions League</button>
+    <button data-league="Europa League">Europa League</button>
+    <button data-league="Conference League">Conference League</button>
+  </div>
+  <div class="toolbar"><input id="search" placeholder="Search a team or competition…" autocomplete="off"></div>
+  <div id="statusMessage" class="notice">Connect a live odds provider in Settings to load upcoming matches.</div>
+  <div id="matches" class="matchgrid"></div>
+
+  <section class="panel">
+    <h3>How to read ODDSENSE</h3>
+    <div class="statline"><span>Market probability</span><b>Bookmaker-implied estimate</b></div>
+    <div class="statline"><span>Market lean</span><b>Most likely 1X2 outcome by market</b></div>
+    <div class="statline"><span>Risk screen</span><b>Simple data-quality heuristic</b></div>
+    <p class="smallprint">These are market-derived indicators, not independent forecasts. A shorter price does not automatically mean a profitable bet. Compare prices and account for the bookmaker margin.</p>
+  </section>
+  <div class="footer">ODDSENSE v0.2 · Personal research tool · No bet placement. Betting involves risk. Never stake money you cannot afford to lose. Use local laws and age restrictions. API key stays in this browser's local storage on this device.</div>
+</div>
+
+<dialog id="settingsDialog">
+  <div class="dialoghead"><h2>Live data connection</h2><button class="close" id="closeSettings" aria-label="Close">×</button></div>
+  <p class="smallprint">ODDSENSE currently uses The Odds API for 1X2 bookmaker prices in supported European competitions.</p>
+  <div class="field"><label for="apiKey">The Odds API key</label><input id="apiKey" type="password" placeholder="Paste your API key" autocomplete="off"></div>
+  <div class="row"><button class="btn primary" id="saveKey">Save & sync</button><button class="btn" id="forgetKey">Forget key</button></div>
+  <p class="smallprint">The key is stored only in this browser on this device. Do not publish this personal app with your key embedded in its source. Provider quotas apply.</p>
+  <div class="notice">Get a key at <a href="https://the-odds-api.com/" target="_blank" rel="noreferrer" style="color:var(--green)">the-odds-api.com</a>. Never send your key to anyone.</div>
+</dialog>
+
+<script>
+const API_BASE = "https://api.the-odds-api.com/v4/sports/";
+const SPORTS = [
+  ["soccer_epl","Premier League"],["soccer_spain_la_liga","La Liga"],
+  ["soccer_germany_bundesliga","Bundesliga"],["soccer_italy_serie_a","Serie A"],
+  ["soccer_france_ligue_one","Ligue 1"],["soccer_uefa_champs_league","Champions League"],
+  ["soccer_uefa_europa_league","Europa League"],["soccer_uefa_europa_conference_league","Conference League"]
+];
+const $ = id => document.getElementById(id);
+let matches = [], activeLeague = "All", lastUpdated = null, busy = false;
+const savedKey = () => localStorage.getItem("oddsense_api_key") || "";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function fmtTime(iso){try{return new Intl.DateTimeFormat(undefined,{weekday:"short",day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}).format(new Date(iso))}catch{return iso}}
+function average(a){return a.length ? a.reduce((x,y)=>x+y,0)/a.length : null}
+function analyzeEvent(e, league){
+  const best = {}, implied = {home:[],draw:[],away:[]}, bookNames = new Set();
+  for(const book of (e.bookmakers||[])){
+    let sawH2H = false;
+    for(const market of (book.markets||[])){
+      if(market.key !== "h2h") continue;
+      sawH2H = true;
+      for(const out of (market.outcomes||[])){
+        const price = Number(out.price);
+        if(!Number.isFinite(price) || price <= 1) continue;
+        const name = out.name;
+        if(best[name] == null || price > best[name]) best[name] = price;
+        let bucket = name === e.home_team ? "home" : name === e.away_team ? "away" : name.toLowerCase() === "draw" ? "draw" : null;
+        if(bucket) implied[bucket].push(1/price);
+      }
+    }
+    if(sawH2H) bookNames.add(book.title || book.key);
+  }
+  const raw = [average(implied.home), average(implied.draw), average(implied.away)];
+  const sum = raw.filter(v=>v!=null).reduce((a,b)=>a+b,0);
+  const fair = raw.map(v=>v==null || !sum ? null : v/sum);
+  const max = Math.max(...fair.map(v=>v??-1));
+  const index = fair.findIndex(v=>v===max);
+  const labels = [e.home_team,"Draw",e.away_team];
+  const margin = sum ? (sum-1)*100 : null;
+  let risk = "HIGH";
+  if(bookNames.size >= 5 && max >= .60) risk = "LOWER";
+  else if(bookNames.size >= 3 && max >= .53) risk = "MODERATE";
+  const lean = max >= .53 ? labels[index] : "No clear lean";
+  return {id:e.id,league,home:e.home_team,away:e.away_team,kickoff:e.commence_time,books:bookNames.size,
+    odds:[best[e.home_team]||null,best.Draw||null,best[e.away_team]||null],prob:fair,margin,risk,lean};
+}
+async function fetchLeague(sport, league, key){
+  const url = API_BASE + encodeURIComponent(sport) + "/odds/?regions=eu&markets=h2h&oddsFormat=decimal&dateFormat=iso";
+  const response = await fetch(url,{headers:{"x-api-key":key}});
+  if(!response.ok){
+    if(response.status===401 || response.status===403) throw new Error("The API key was rejected. Check the key in Settings.");
+    if(response.status===429) throw new Error("The provider rate limit was reached. Wait before refreshing.");
+    if(response.status===422) return [];
+    throw new Error(`Provider error ${response.status} for ${league}.`);
+  }
+  const data = await response.json();
+  return data.map(e=>analyzeEvent(e,league));
+}
+async function refresh(){
+  if(busy) return;
+  const key = savedKey();
+  if(!key){ $("statusMessage").className="notice"; $("statusMessage").textContent="Add your API key in Settings to connect live odds."; return; }
+  busy=true; $("refreshBtn").disabled=true; $("dataStatus").textContent="SYNCING"; $("statusMessage").className="notice"; $("statusMessage").textContent="Fetching odds from supported competitions…";
+  const results=[], errors=[];
+  for(const [sport,league] of SPORTS){
+    try{ results.push(...await fetchLeague(sport,league,key)); }
+    catch(e){ errors.push(e.message); if(/API key was rejected|rate limit/.test(e.message)) break; }
+  }
+  matches=results.sort((a,b)=>new Date(a.kickoff)-new Date(b.kickoff));
+  lastUpdated=new Date();
+  $("dataStatus").textContent=matches.length ? "LIVE" : "NO DATA";
+  $("updatedAt").textContent=lastUpdated.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+  $("fixtureCount").textContent=matches.length;
+  if(errors.length && !matches.length){$("statusMessage").className="notice bad";$("statusMessage").textContent=errors[0]+" Check your connection, API quota and provider coverage."}
+  else if(errors.length){$("statusMessage").className="notice bad";$("statusMessage").textContent=`Loaded ${matches.length} matches, but some competitions could not be fetched: ${errors[0]}`}
+  else if(!matches.length){$("statusMessage").className="notice";$("statusMessage").textContent="No upcoming odds were returned. Coverage and availability vary by competition and API plan."}
+  else{$("statusMessage").className="notice good";$("statusMessage").textContent="Odds received. Indicators below summarize bookmaker prices, not guaranteed outcomes."}
+  render(); busy=false; $("refreshBtn").disabled=false;
+}
+function render(){
+  const query=$("search").value.trim().toLowerCase();
+  const list=matches.filter(m=>(activeLeague==="All"||m.league===activeLeague)&&(`${m.home} ${m.away} ${m.league}`).toLowerCase().includes(query));
+  $("resultCount").textContent=`${list.length} shown`;
+  $("matches").innerHTML=list.map(m=>{
+    const riskClass=m.risk==="LOWER"?"":m.risk==="MODERATE"?"warn":"danger";
+    return `<article class="match">
+      <div class="matchtop"><span class="league">${esc(m.league)}</span><span class="kickoff">${esc(fmtTime(m.kickoff))}</span></div>
+      <div class="teams"><div class="team">${esc(m.home)}</div><div class="vs">VS</div><div class="team" style="text-align:right">${esc(m.away)}</div></div>
+      <div class="odds">${["1","X","2"].map((label,i)=>`<div class="odd"><small>${label}</small><b>${m.odds[i]?m.odds[i].toFixed(2):"—"}</b></div>`).join("")}</div>
+      <div class="matchbottom"><span>${m.books} bookmakers</span><span>Lean: <b style="color:var(--white)">${esc(m.lean)}</b></span><span class="pill ${riskClass}">${m.risk} SCREEN</span></div>
+      <div class="matchbottom"><span>Normalized market estimate</span><span>${m.prob.map(v=>v==null?"—":(v*100).toFixed(0)+"%").join(" / ")}</span></div>
+      <div class="matchbottom"><span>Approx. market margin</span><span>${m.margin==null?"n/a":m.margin.toFixed(1)+"%"}</span></div>
+    </article>`;
+  }).join("");
+  if(!list.length && matches.length) $("matches").innerHTML='<div class="empty">No fixtures match this filter.</div>';
+}
+$("settingsBtn").addEventListener("click",()=>{$("apiKey").value=savedKey();$("settingsDialog").showModal()});
+$("closeSettings").addEventListener("click",()=>$("settingsDialog").close());
+$("saveKey").addEventListener("click",()=>{const k=$("apiKey").value.trim();if(k)localStorage.setItem("oddsense_api_key",k);$("settingsDialog").close();refresh()});
+$("forgetKey").addEventListener("click",()=>{localStorage.removeItem("oddsense_api_key");$("apiKey").value="";matches=[];$("settingsDialog").close();$("dataStatus").textContent="OFFLINE";$("fixtureCount").textContent="—";render();$("statusMessage").textContent="API key removed from this browser."});
+$("refreshBtn").addEventListener("click",refresh);
+$("search").addEventListener("input",render);
+$("leagueFilters").addEventListener("click",e=>{const b=e.target.closest("button[data-league]");if(!b)return;activeLeague=b.dataset.league;document.querySelectorAll("#leagueFilters button").forEach(x=>x.classList.toggle("active",x===b));render()});
+if("serviceWorker" in navigator && location.protocol.startsWith("http")) window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+if(savedKey()) refresh();
+setInterval(()=>{if(document.visibilityState==="visible"&&savedKey())refresh()},5*60*1000);
+</script>
+</body>
+</html>
