@@ -1,4 +1,4 @@
-const CACHE = 'oddsense-shell-v2';
+const CACHE = 'betrix-shell-v1';
 const SHELL = [
   './',
   './index.html',
