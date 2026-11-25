@@ -1,11 +1,12 @@
+
 {
-  "name": "ODDSENSE Football Intelligence",
-  "short_name": "ODDSENSE",
+  "name": "BETRIX Football Intelligence",
+  "short_name": "BETRIX",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#101713",
   "theme_color": "#101713",
-  "description": "European football odds and market analysis dashboard.",
+  "description": "Football intelligence, match analysis and betting opportunities.",
   "icons": [
     {
       "src": "assets/icon.svg",
