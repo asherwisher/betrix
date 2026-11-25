@@ -1,12 +1,49 @@
-const CACHE='oddsense-shell-v1';
-const SHELL=['./','./index.html','./manifest.webmanifest','./assets/icon.svg'];
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL))));
-self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
-self.addEventListener('fetch',e=>{
-  const u=new URL(e.request.url);
-  if(u.origin===location.origin && e.request.method==='GET'){
-    e.respondWith(caches.match(e.request).then(cached=>cached||fetch(e.request).then(r=>{
-      const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));return r;
-    }).catch(()=>cached)));
+const CACHE = 'oddsense-shell-v2';
+const SHELL = [
+  './',
+  './index.html',
+  './manifest.webmanifest',
+  './assets/icon.svg'
+];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE)
+      .then(cache => cache.addAll(SHELL))
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(
+        keys.filter(key => key !== CACHE)
+          .map(key => caches.delete(key))
+      ))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+
+  if (
+    url.origin === location.origin &&
+    event.request.method === 'GET'
+  ) {
+    event.respondWith(
+      caches.match(event.request).then(cached =>
+        cached || fetch(event.request).then(response => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then(cache =>
+              cache.put(event.request, copy)
+            );
+          }
+          return response;
+        })
+      )
+    );
   }
 });
