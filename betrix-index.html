@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101713">
+<meta name="description" content="BETRIX football intelligence and match analysis.">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>BETRIX | Football Intelligence</title>
+<style>
+:root{--bg:#0d1511;--panel:#141f19;--panel2:#1a2820;--text:#eef4ed;--muted:#91a197;--line:#29382f;--lime:#b8f36b;--green:#233d2b;--red:#ff817d;--amber:#f2c879;--shadow:0 14px 40px #0005}
+:root.light{--bg:#f3f6f0;--panel:#fff;--panel2:#edf2e9;--text:#17241b;--muted:#68776d;--line:#dce5d9;--lime:#a2d94d;--green:#e5f0dc;--red:#c64b48;--amber:#93651d;--shadow:0 12px 32px #20302012}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;transition:background .25s,color .25s}
+button,input,select,textarea{font:inherit}button{cursor:pointer;color:inherit}.app{max-width:1100px;margin:auto;padding:0 16px 100px}
+header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(18px);padding:14px 0 12px;border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.13em;font-size:17px}.mark{width:34px;height:34px;border-radius:11px;background:var(--lime);color:#152117;display:grid;place-items:center;font-size:22px;font-weight:900}.top-actions{display:flex;gap:8px}.iconbtn,.secondary{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:9px 12px}.iconbtn:active,.btn:active,.secondary:active,.nav button:active{transform:scale(.97)}
+.statusline{font-size:11px;color:var(--muted);margin:9px 0 0 44px;display:flex;align-items:center;gap:7px}.dot{width:7px;height:7px;border-radius:50%;background:var(--amber);display:inline-block}.dot.on{background:var(--lime)}
+main{padding-top:22px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.16em;color:var(--lime);text-transform:uppercase}.heading{font-size:clamp(27px,6vw,39px);line-height:1.08;letter-spacing:-.045em;margin:7px 0 8px}.sub{color:var(--muted);margin:0 0 20px}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:18px 0}.toolbar select,.toolbar input,.field{background:var(--panel);border:1px solid var(--line);border-radius:11px;color:var(--text);padding:10px 12px;min-height:42px}.toolbar input{flex:1;min-width:150px}
+.btn{border:0;border-radius:12px;background:var(--lime);color:#172117;font-weight:850;padding:11px 16px;transition:transform .15s,filter .2s}.btn:hover{filter:brightness(1.06)}.btn:disabled{opacity:.5;cursor:not-allowed}.secondary{font-weight:700}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow);animation:rise .28s ease both}.cardhead{display:flex;justify-content:space-between;gap:10px;align-items:center}.league{color:var(--muted);font-size:12px;font-weight:750}.kick{font-size:12px;color:var(--lime);font-weight:800}.teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin:18px 0}.team{font-weight:800;line-height:1.25}.team:last-child{text-align:right}.vs{color:var(--muted);font-size:11px}.odds{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.odd{background:var(--panel2);border-radius:10px;padding:9px 5px;text-align:center}.odd small{display:block;color:var(--muted);font-size:10px}.odd b{font-size:15px}.cardfoot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:13px}.tiny{font-size:11px;color:var(--muted)}.textbtn{background:none;border:0;color:var(--lime);font-weight:800;padding:6px 0}
+.datebar{display:flex;gap:8px;overflow:auto;padding:2px 0 10px;scrollbar-width:none}.datechip{white-space:nowrap;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 13px;color:var(--muted)}.datechip.active{background:var(--green);border-color:var(--lime);color:var(--text)}
+.section-title{font-size:17px;font-weight:850;margin:24px 0 10px;letter-spacing:-.02em}.empty{border:1px dashed var(--line);border-radius:18px;padding:25px 18px;text-align:center;color:var(--muted);background:var(--panel)}.empty strong{display:block;color:var(--text);font-size:16px;margin-bottom:6px}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:color-mix(in srgb,var(--panel) 94%,transparent);backdrop-filter:blur(20px);border-top:1px solid var(--line);padding:9px max(12px,env(safe-area-inset-left)) calc(9px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.nav button{border:0;background:transparent;color:var(--muted);padding:8px 3px;border-radius:12px;font-size:11px;font-weight:750;transition:background .2s,transform .15s}.nav button span{display:block;font-size:19px;margin-bottom:3px}.nav button.active{background:var(--green);color:var(--text)}
+.metricgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.metric{background:var(--panel2);border-radius:14px;padding:14px}.metric b{display:block;font-size:24px}.metric small{color:var(--muted)}.panel{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:16px;margin:12px 0}
+.modalback{position:fixed;inset:0;background:#0009;z-index:40;display:none;align-items:flex-end;justify-content:center;padding:14px}.modalback.show{display:flex}.modal{background:var(--panel);border:1px solid var(--line);border-radius:22px 22px 16px 16px;width:min(100%,560px);max-height:88vh;overflow:auto;padding:20px;animation:rise .22s ease}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.modal h2{margin:0;font-size:21px}.close{border:0;background:var(--panel2);border-radius:10px;padding:7px 11px}.fieldrow{margin:14px 0}.fieldrow label{display:block;font-size:12px;color:var(--muted);font-weight:750;margin-bottom:6px}.fieldrow input,.fieldrow select,.fieldrow textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:11px;color:var(--text);padding:12px}.note{font-size:12px;color:var(--muted);line-height:1.5}.pill{font-size:10px;border:1px solid var(--line);border-radius:99px;padding:4px 8px;color:var(--muted);font-weight:800}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.reason{border-left:2px solid var(--lime);padding-left:12px;color:var(--muted);font-size:13px;margin:12px 0}
+@keyframes rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:680px){.grid{grid-template-columns:1fr}.app{padding-left:13px;padding-right:13px}.heading{font-size:31px}.card{padding:14px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="top"><div class="brand"><div class="mark">⌁</div>BETRIX</div><div class="top-actions"><button class="iconbtn" id="refreshBtn" aria-label="Refresh">↻</button><button class="iconbtn" id="settingsBtn" aria-label="Settings">⚙</button></div></div><div class="statusline"><i class="dot" id="statusDot"></i><span id="statusText">Demo mode · connect your data</span></div></header>
+<main id="view"></main>
+</div>
+<nav class="nav">
+<button class="active" data-page="matchday"><span>◫</span>Matchday</button>
+<button data-page="catalyst"><span>✳</span>Catalyst</button>
+<button data-page="coupon"><span>▤</span>Coupon Lab</button>
+<button data-page="profile"><span>◉</span>Profile</button>
+</nav>
+<div class="modalback" id="modalBack"><div class="modal"><div class="modalhead"><h2 id="modalTitle">Settings</h2><button class="close" id="closeModal">✕</button></div><div id="modalBody"></div></div></div>
+<script>
+const $=s=>document.querySelector(s);
+const state={page:'matchday',events:[],sports:[],loading:false,error:'',date:'all',search:'',league:'all',coupon:[],history:JSON.parse(localStorage.getItem('betrix_history')||'[]'),theme:localStorage.getItem('betrix_theme')||'dark',lastRefresh:null};
+document.documentElement.classList.toggle('light',state.theme==='light');
+const savedKey=localStorage.getItem('oddsense_api_key')||localStorage.getItem('betrix_api_key')||'';
+const fmtTime=d=>new Date(d).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+const dayKey=d=>new Date(d).toLocaleDateString('en-CA');
+const dayLabel=d=>{const x=new Date(d),t=new Date();if(dayKey(x)===dayKey(t))return'TODAY';const tom=new Date(t);tom.setDate(t.getDate()+1);if(dayKey(x)===dayKey(tom))return'TOMORROW';return x.toLocaleDateString([], {weekday:'long',day:'numeric',month:'short'}).toUpperCase()};
+function setStatus(text,on=false){$('#statusText').textContent=text;$('#statusDot').classList.toggle('on',on)}
+function showPage(p){state.page=p;document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===p));render()}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+$('#settingsBtn').onclick=openSettings;$('#closeModal').onclick=closeModal;$('#modalBack').addEventListener('click',e=>{if(e.target===$('#modalBack'))closeModal()});
+$('#refreshBtn').onclick=refreshData;
+function openModal(title,html){$('#modalTitle').textContent=title;$('#modalBody').innerHTML=html;$('#modalBack').classList.add('show')}
+function closeModal(){$('#modalBack').classList.remove('show')}
+function openSettings(){openModal('Settings',`
+<div class="fieldrow"><label>THE ODDS API KEY</label><input id="apiKey" type="password" autocomplete="off" placeholder="Paste your API key" value="${savedKey.replace(/"/g,'&quot;')}"><p class="note">Your existing saved key is preserved. It stays in this browser on this device. Never share it in chat or screenshots.</p></div>
+<div class="row"><button class="btn" id="saveKey">Save key</button><button class="secondary" id="testKey">Connect & refresh</button></div>
+<div class="fieldrow"><label>APPEARANCE</label><select id="themeSelect"><option value="dark" ${state.theme==='dark'?'selected':''}>Dark forest</option><option value="light" ${state.theme==='light'?'selected':''}>Light</option></select></div>
+<div class="fieldrow"><label>ODDS FORMAT</label><select id="oddsFormat"><option>Decimal</option></select><p class="note">Decimal odds are used in this build.</p></div>
+<div class="fieldrow"><label>DATA & REFRESH</label><p class="note">BETRIX refreshes only when you ask it to. No continuous scanning or scheduled requests.</p></div>
+<p class="note">This is an early frontend build. Advanced statistical forecasts, full Catalyst generation and long-term performance tracking are not active yet.</p>`);
+$('#saveKey').onclick=()=>{const k=$('#apiKey').value.trim();if(k){localStorage.setItem('oddsense_api_key',k);setStatus('API key saved · ready to connect');}else{localStorage.removeItem('oddsense_api_key');setStatus('No API key saved');}closeModal()};
+$('#testKey').onclick=async()=>{const k=$('#apiKey').value.trim();if(!k){alert('Add your API key first.');return}localStorage.setItem('oddsense_api_key',k);closeModal();await refreshData()};
+$('#themeSelect').onchange=e=>{state.theme=e.target.value;localStorage.setItem('betrix_theme',state.theme);document.documentElement.classList.toggle('light',state.theme==='light')};
+}
+async function refreshData(){
+ const key=localStorage.getItem('oddsense_api_key')||localStorage.getItem('betrix_api_key');
+ if(!key){openSettings();setStatus('Add your Odds API key to load live odds');return}
+ if(state.loading)return;state.loading=true;setStatus('Refreshing match data…');
+ try{
+  const sr=await fetch('https://api.the-odds-api.com/v4/sports/?apiKey='+encodeURIComponent(key));
+  if(!sr.ok)throw new Error('Sports request failed ('+sr.status+'). Check your API key or quota.');
+  const sports=await sr.json();state.sports=sports.filter(s=>s.active&&(/soccer/i.test(s.group||'')||/^soccer_/i.test(s.key||'')));
+  const chunks=await Promise.all(state.sports.map(async s=>{
+   try{const r=await fetch(`https://api.the-odds-api.com/v4/sports/${encodeURIComponent(s.key)}/odds/?apiKey=${encodeURIComponent(key)}&regions=eu&markets=h2h&oddsFormat=decimal`);if(!r.ok)return[];return (await r.json()).map(e=>({...e,leagueName:s.title||s.key}));}catch{return[]}
+  }));
+  const map=new Map();chunks.flat().forEach(e=>map.set(e.id,e));state.events=[...map.values()].sort((a,b)=>new Date(a.commence_time)-new Date(b.commence_time));state.lastRefresh=new Date();state.error='';
+  setStatus(`${state.events.length} matches · updated ${fmtTime(state.lastRefresh)}`,true);
+ }catch(e){state.error=e.message;setStatus('Connection issue · '+e.message); }
+ finally{state.loading=false;render()}
+}
+function bestPrices(ev){
+ const out={home:[],draw:[],away:[]};(ev.bookmakers||[]).forEach(b=>(b.markets||[]).filter(m=>m.key==='h2h').forEach(m=>(m.outcomes||[]).forEach(o=>{let k=o.name===ev.home_team?'home':o.name===ev.away_team?'away':'draw';if(k==='draw'&&o.name.toLowerCase()!=='draw')return;out[k].push({price:o.price,book:b.title})})));
+ return Object.fromEntries(Object.entries(out).map(([k,v])=>[k,v.sort((a,b)=>b.price-a.price)]));
+}
+function oddsHtml(ev){const p=bestPrices(ev);return `<div class="odds">${[['1','home'],['X','draw'],['2','away']].map(([label,k])=>`<div class="odd"><small>${label}</small><b>${p[k][0]?p[k][0].price.toFixed(2):'–'}</b></div>`).join('')}</div>`}
+function eventCard(ev){const p=bestPrices(ev);const has=Object.values(p).some(a=>a.length);return `<article class="card"><div class="cardhead"><span class="league">${ev.leagueName||'Football'}</span><span class="kick">${fmtTime(ev.commence_time)}</span></div><div class="teams"><div class="team">${ev.home_team}</div><div class="vs">VS</div><div class="team">${ev.away_team}</div></div>${has?oddsHtml(ev):'<div class="tiny">Odds not available for this match</div>'}<div class="cardfoot"><span class="tiny">${(ev.bookmakers||[]).length} bookmakers</span><button class="textbtn" data-event="${ev.id}">Match insight →</button></div></article>`}
+function renderMatchday(){
+ const dates=[...new Set(state.events.map(e=>dayKey(e.commence_time)))];
+ let list=state.events.filter(e=>(state.date==='all'||dayKey(e.commence_time)===state.date)&&(state.league==='all'||e.leagueName===state.league)&&(`${e.home_team} ${e.away_team} ${e.leagueName}`).toLowerCase().includes(state.search.toLowerCase()));
+ const leagues=[...new Set(state.events.map(e=>e.leagueName))].sort();
+ let groups={};list.forEach(e=>(groups[dayKey(e.commence_time)]??=[]).push(e));
+ return `<div class="eyebrow">Football intelligence</div><h1 class="heading">Matchday<span style="color:var(--lime)">.</span></h1><p class="sub">Every available fixture. Clear market context. No noise.</p>
+ <div class="datebar"><button class="datechip ${state.date==='all'?'active':''}" data-date="all">All dates</button>${dates.map(d=>`<button class="datechip ${state.date===d?'active':''}" data-date="${d}">${dayLabel(d)}</button>`).join('')}</div>
+ <div class="toolbar"><input id="matchSearch" placeholder="Search team or competition…" value="${state.search.replace(/"/g,'&quot;')}"><select id="leagueFilter"><option value="all">All competitions</option>${leagues.map(l=>`<option ${state.league===l?'selected':''}>${l}</option>`).join('')}</select><button class="secondary" id="refreshInline">↻ Refresh</button></div>
+ ${state.loading?'<div class="empty">Refreshing match data…</div>':''}
+ ${!state.events.length&&!state.loading?`<div class="empty"><strong>${state.error?'Could not load matches':'Your matchday starts here'}</strong>${state.error||'Connect The Odds API in Settings, then refresh to load available football fixtures and bookmaker odds.'}<p><button class="btn" id="connectBtn">Connect data</button></p></div>`:''}
+ ${Object.entries(groups).map(([d,events])=>`<h2 class="section-title">${dayLabel(d)} <span class="tiny">· ${events.length} fixtures</span></h2><div class="grid">${events.map(eventCard).join('')}</div>`).join('')}
+ ${state.events.length&&list.length===0?'<div class="empty">No fixtures match those filters.</div>':''}
+ <p class="note" style="margin-top:18px">Market prices are bookmaker quotes, not BETRIX predictions. The Odds API coverage depends on its available sports, bookmakers and your plan.</p>`;
+}
+function renderCatalyst(){return `<div class="eyebrow">Opportunity discovery</div><h1 class="heading">Catalyst<span style="color:var(--lime)">.</span></h1><p class="sub">A shortlist should earn its place. No random coupons.</p><div class="panel"><div class="row"><span class="pill">ENGINE STATUS</span><span class="pill">IN DEVELOPMENT</span></div><h2>Quality before quantity.</h2><p class="note">The Catalyst engine will compare single picks and accumulators, estimate the probability of the whole coupon, assess uncertainty and expected value, and remove correlated combinations.</p><div class="reason">The live odds connection alone is not enough to produce reliable predictions. BETRIX still needs a calibrated football model and historical data before it can publish qualified Catalysts.</div></div><div class="empty"><strong>No qualified Catalysts yet</strong>BETRIX will show nothing rather than invent selections when the evidence is insufficient.</div>`}
+function renderCoupon(){return `<div class="eyebrow">Build & evaluate</div><h1 class="heading">Coupon Lab<span style="color:var(--lime)">.</span></h1><p class="sub">Assemble a coupon and inspect its weak points.</p><div class="panel"><h3 style="margin:0 0 8px">Your selections <span class="pill">${state.coupon.length}</span></h3>${state.coupon.length?state.coupon.map((x,i)=>`<div class="row" style="justify-content:space-between;border-top:1px solid var(--line);padding:10px 0"><div><b>${x.match}</b><div class="tiny">${x.pick} · odds ${x.odds}</div></div><button class="textbtn" data-remove="${i}">Remove</button></div>`).join(''):'<p class="note">No selections yet. Add a match from Matchday using “Match insight”.</p>'}<button class="secondary" id="clearCoupon" ${state.coupon.length?'':'disabled'}>Clear coupon</button></div><div class="panel"><h3 style="margin-top:0">Coupon assessment</h3><p class="note">A proper assessment needs calibrated probabilities, market margin adjustments and correlation checks. This build can collect your selections, but will not pretend to know the chance of the full coupon yet.</p>${state.coupon.length?`<div class="metric"><b>${state.coupon.reduce((a,x)=>a*Number(x.odds||1),1).toFixed(2)}</b><small>Combined decimal odds (price multiplication only)</small></div>`:''}</div>`}
+function renderProfile(){const n=state.history.length;return `<div class="eyebrow">Your record</div><h1 class="heading">Profile<span style="color:var(--lime)">.</span></h1><p class="sub">A transparent record of what BETRIX has actually tracked.</p><div class="metricgrid"><div class="metric"><b>${n}</b><small>Saved match insights</small></div><div class="metric"><b>—</b><small>Prediction accuracy</small></div><div class="metric"><b>—</b><small>Settled coupons</small></div><div class="metric"><b>—</b><small>Actual ROI</small></div></div><div class="panel"><h3 style="margin-top:0">Prediction history</h3>${n?state.history.slice().reverse().map(x=>`<div style="padding:10px 0;border-top:1px solid var(--line)"><b>${x.match}</b><div class="tiny">${x.date} · ${x.pick} · market price ${x.odds}</div></div>`).join(''):'<p class="note">Your history is empty. Saved insights will appear here. Accuracy and ROI will stay blank until predictions are recorded before kickoff and results or stakes are properly settled.</p>'}</div><div class="panel"><h3 style="margin-top:0">BETRIX Intelligence Report</h3><p class="note">Planned: probability calibration, strongest and weakest markets, performance by competition, and confidence reliability. Model performance will be kept separate from your personal betting returns.</p><span class="pill">NOT ACTIVE YET</span></div>`}
+function render(){const v=$('#view');v.innerHTML=state.page==='matchday'?renderMatchday():state.page==='catalyst'?renderCatalyst():state.page==='coupon'?renderCoupon():renderProfile();
+ $('#refreshInline')?.addEventListener('click',refreshData);$('#connectBtn')?.addEventListener('click',openSettings);$('#matchSearch')?.addEventListener('input',e=>{state.search=e.target.value;const pos=e.target.selectionStart;render();const el=$('#matchSearch');el.focus();el.setSelectionRange(pos,pos)});$('#leagueFilter')?.addEventListener('change',e=>{state.league=e.target.value;render()});document.querySelectorAll('[data-date]').forEach(b=>b.addEventListener('click',()=>{state.date=b.dataset.date;render()}));document.querySelectorAll('[data-event]').forEach(b=>b.addEventListener('click',()=>showInsight(b.dataset.event)));document.querySelectorAll('[data-remove]').forEach(b=>b.addEventListener('click',()=>{state.coupon.splice(Number(b.dataset.remove),1);render()}));$('#clearCoupon')?.addEventListener('click',()=>{state.coupon=[];render()});}
+function showInsight(id){const ev=state.events.find(e=>e.id===id);if(!ev)return;const p=bestPrices(ev);const opts=[['Home',p.home[0]],['Draw',p.draw[0]],['Away',p.away[0]]].filter(x=>x[1]);openModal('Match insight',`<div class="eyebrow">${ev.leagueName||'Football'}</div><h2 style="margin:8px 0">${ev.home_team} vs ${ev.away_team}</h2><p class="note">Kickoff: ${new Date(ev.commence_time).toLocaleString()}</p><div class="panel"><b>Best available 1X2 prices</b>${opts.map(([name,o])=>`<div class="row" style="justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)"><span>${name} <span class="tiny">· ${o.book}</span></span><b>${o.price.toFixed(2)}</b><button class="textbtn" data-add="${name}" data-odds="${o.price}">Add</button></div>`).join('')}</div><p class="note">This is a bookmaker market snapshot, not a prediction. BETRIX's statistical Mini-Catalyst is not active yet.</p>`);
+ $('#modalBody').querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{state.coupon.push({match:ev.home_team+' vs '+ev.away_team,pick:b.dataset.add,odds:b.dataset.odds});closeModal();showPage('coupon')});
+ const hist=$('#modalBody');const save=document.createElement('button');save.className='secondary';save.textContent='Save market snapshot to Profile';save.onclick=()=>{state.history.push({match:ev.home_team+' vs '+ev.away_team,pick:'Market snapshot',odds:opts.map(x=>x[1].price.toFixed(2)).join(' / '),date:new Date().toLocaleString()});localStorage.setItem('betrix_history',JSON.stringify(state.history));closeModal();alert('Saved to Profile.');};hist.appendChild(save);
+}
+render();if(savedKey)setStatus('API key found · refresh to load matches');
+</script>
+</body>
+</html>
