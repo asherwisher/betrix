@@ -99,7 +99,7 @@ async function refreshData(force=false){
  const cachedAt=Number(localStorage.getItem(STORE.fixturesAt)||0);const fresh=state.events.length&&Date.now()-cachedAt<6*60*60*1000;
  if(fresh&&!force){setStatus(`${state.events.length} fixtures · cached`,true);render();return}
  state.loading=true;state.error='';setStatus('Loading football fixtures…');render();
- try{const d=todayKey(),end=addDays(d,6);const data=await api(`fixtures?from=${d}&to=${end}&timezone=Africa%2FAlgiers`);const rows=Array.isArray(data.response)?data.response:[];state.events=rows;localStorage.setItem(STORE.fixtures,JSON.stringify(rows));localStorage.setItem(STORE.fixturesAt,String(Date.now()));state.date='today';setStatus(`${rows.length} fixtures · updated`,true);if(!rows.length)state.error='The provider returned no fixtures in this seven-day window. Try another date or refresh later.'}
+ try{const data=await api('fixtures?next=99&timezone=Africa%2FAlgiers');const rows=Array.isArray(data.response)?data.response:[];state.events=rows;localStorage.setItem(STORE.fixtures,JSON.stringify(rows));localStorage.setItem(STORE.fixturesAt,String(Date.now()));state.date='today';setStatus(`${rows.length} fixtures · updated`,true);if(!rows.length)state.error='The provider returned no upcoming fixtures. Try manual refresh later.'}
  catch(e){state.error=e.message||'Could not load fixtures';setStatus(state.events.length?'Showing saved fixtures · refresh failed':'Football data unavailable',false)}
  finally{state.loading=false;render()}
 }
