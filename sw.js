@@ -1,4 +1,4 @@
-const CACHE = 'betrix-shell-v3';
+const CACHE = 'betrix-shell-v4';
 const SHELL = [
   './',
   './index.html',
@@ -27,7 +27,6 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
-
   if (
     url.origin === location.origin &&
     event.request.method === 'GET'
