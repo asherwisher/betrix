@@ -99,7 +99,21 @@ async function refreshData(force=false){
  const cachedAt=Number(localStorage.getItem(STORE.fixturesAt)||0);const fresh=state.events.length&&Date.now()-cachedAt<6*60*60*1000;
  if(fresh&&!force){setStatus(`${state.events.length} fixtures · cached`,true);render();return}
  state.loading=true;state.error='';setStatus('Loading football fixtures…');render();
- try{const data=await api('fixtures?next=99&timezone=Africa%2FAlgiers');const rows=Array.isArray(data.response)?data.response:[];state.events=rows;localStorage.setItem(STORE.fixtures,JSON.stringify(rows));localStorage.setItem(STORE.fixturesAt,String(Date.now()));state.date='today';setStatus(`${rows.length} fixtures · updated`,true);if(!rows.length)state.error='The provider returned no upcoming fixtures. Try manual refresh later.'}
+ try{
+  // Free-plan compatible: request each calendar date instead of using next/from/to.
+  const days=Array.from({length:7},(_,i)=>addDays(todayKey(),i));
+  const rows=[],failures=[];
+  for(const day of days){
+   try{const data=await api(`fixtures?date=${day}&timezone=Africa%2FAlgiers`);if(Array.isArray(data.response))rows.push(...data.response)}
+   catch(e){failures.push(`${day}: ${e.message}`)}
+  }
+  const unique=[...new Map(rows.map(ev=>[String(ev.fixture?.id),ev])).values()];
+  if(!unique.length&&failures.length)throw new Error(failures[0]);
+  state.events=unique;localStorage.setItem(STORE.fixtures,JSON.stringify(unique));localStorage.setItem(STORE.fixturesAt,String(Date.now()));state.date='today';
+  setStatus(`${unique.length} fixtures · updated`,true);
+  if(failures.length)state.error=`Some dates could not be loaded (${failures.length}/7). ${failures[0]}`;
+  else if(!unique.length)state.error='No fixtures were returned for the next seven days.';
+ }
  catch(e){state.error=e.message||'Could not load fixtures';setStatus(state.events.length?'Showing saved fixtures · refresh failed':'Football data unavailable',false)}
  finally{state.loading=false;render()}
 }
@@ -153,7 +167,7 @@ function renderProfile(){const saved=Object.values(state.predictions);let wins=0
 
 function render(){const v=$('#view');v.innerHTML=state.page==='matchday'?renderMatchday():state.page==='catalyst'?renderCatalyst():state.page==='coupon'?renderCoupon():renderProfile();$('#connectBtn')?.addEventListener('click',openSettings);$('#matchSearch')?.addEventListener('input',e=>{state.search=e.target.value;const pos=e.target.selectionStart;render();const el=$('#matchSearch');el.focus();el.setSelectionRange(pos,pos)});$('#leagueFilter')?.addEventListener('change',e=>{state.league=e.target.value;render()});document.querySelectorAll('[data-date]').forEach(b=>b.addEventListener('click',()=>{state.date=b.dataset.date;render()}));document.querySelectorAll('[data-event]').forEach(b=>b.addEventListener('click',()=>showInsight(b.dataset.event)));document.querySelectorAll('[data-remove]').forEach(b=>b.addEventListener('click',()=>{state.coupon.splice(Number(b.dataset.remove),1);render()}));document.querySelectorAll('[data-risk]').forEach(b=>b.addEventListener('click',()=>{state.catalystRisk=b.dataset.risk;render()}));$('#analyzeBtn')?.addEventListener('click',analyzeCoupon)}
 async function analyzeCoupon(){if(!state.coupon.length||state.couponAnalyzing)return;const b=$('#analyzeBtn'),result=$('#analysisResult');state.couponAnalyzing=true;b.disabled=true;result.innerHTML='<div class="empty">Checking your selections…</div>';await new Promise(r=>setTimeout(r,250));const ids=state.coupon.map(x=>x.fixtureId);const dup=ids.some((x,i)=>ids.indexOf(x)!==i);const missing=state.coupon.some(x=>!Number.isFinite(x.probability));const weak=state.coupon.some(x=>Number.isFinite(x.probability)&&x.probability<45);const sameLeague=new Set(state.coupon.map(x=>x.league)).size===1&&state.coupon.length>1;let title='REVIEW YOUR COUPON',msg='Review each selection and its uncertainty before combining them.';if(dup){title='RETHINK';msg='The same match appears more than once. Keep only one selection per match.'}else if(weak){title='HIGHER UNCERTAINTY';msg='At least one selection has a lower provider 1X2 estimate. Consider removing weaker legs.'}else if(sameLeague){title='CONCENTRATED COUPON';msg='All selections come from one competition. Shared league-level factors may affect several legs.'}else if(missing){title='INSUFFICIENT PROBABILITY DATA';msg='One or more selections do not have a numerical 1X2 estimate. A combined win probability cannot be calculated honestly.'}else{title='STRUCTURE CHECK';msg='No duplicate fixtures detected. This is a structural review, not proof of positive expected value.'}result.innerHTML=`<div class="verdict"><strong>${title}</strong><p>${msg}</p></div><div class="panel"><b>${state.coupon.length} selections</b><p class="note">${missing?'Combined probability withheld because some legs lack numerical estimates.':'Individual estimates come from API-Football, not a calibrated BETRIX model.'} Coupon probability is not multiplied across legs because match outcomes may be dependent and the estimates have not been calibrated by BETRIX.</p></div>`;state.couponAnalyzing=false;b.disabled=false}
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=4').catch(()=>{}))}
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=6').catch(()=>{}))}
 render();if(savedKey){const at=Number(localStorage.getItem(STORE.fixturesAt)||0);if(!state.events.length||Date.now()-at>6*60*60*1000){setStatus(state.events.length?'Showing cached fixtures':'Loading fixtures…');refreshData(false)}else setStatus(`${state.events.length} fixtures · cached`,true)}else setStatus(state.events.length?'Saved fixtures · connect for updates':'Connect football data');
 
 </script>
