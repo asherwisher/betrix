@@ -1,4 +1,4 @@
-const CACHE = 'betrix-shell-v2';
+const CACHE = 'betrix-shell-v3';
 const SHELL = [
   './',
   './index.html',
