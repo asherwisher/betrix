@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101713">
+<meta name="description" content="BETRIX football intelligence and match analysis.">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>BETRIX | Football Intelligence</title>
+<style>
+:root{--bg:#0d1511;--panel:#141f19;--panel2:#1b2821;--row1:#18241d;--row2:#202d25;--text:#eef4ed;--muted:#91a197;--line:#29382f;--lime:#b8f36b;--green:#29432f;--red:#ff7777;--amber:#f2c879;--shadow:0 10px 30px #0003}
+:root.light{--bg:#f3f6f0;--panel:#fff;--panel2:#edf2e9;--row1:#f5f8f2;--row2:#eaf0e6;--text:#17241b;--muted:#68776d;--line:#dce5d9;--lime:#a2d94d;--green:#e5f0dc;--red:#c64b48;--amber:#93651d;--shadow:0 8px 24px #20302010}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;transition:background .2s,color .2s}
+button,input,select{font:inherit}button{cursor:pointer;color:inherit}.app{max-width:1000px;margin:auto;padding:0 14px 100px}
+header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 91%,transparent);backdrop-filter:blur(18px);padding:11px 0;border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;gap:10px;min-height:38px}.brand{display:flex;align-items:center;gap:8px;font-weight:900;letter-spacing:.13em;font-size:16px;white-space:nowrap}.mark{width:32px;height:32px;border-radius:10px;background:var(--lime);color:#152117;display:grid;place-items:center;font-size:21px;font-weight:900}
+.statusline{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:10px;min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dot{width:7px;height:7px;border-radius:50%;background:var(--amber);display:inline-block;flex:none}.dot.on{background:var(--lime)}
+.top-actions{display:flex;align-items:center;gap:6px}.iconbtn{width:34px;height:34px;border:1px solid var(--line);background:var(--panel);border-radius:11px;display:grid;place-items:center;font-size:16px}.helpbtn{font-weight:900;font-size:13px}
+button:active{transform:scale(.97)}main{padding-top:15px}
+.toolbar{display:flex;gap:7px;align-items:center;margin:8px 0 12px}.toolbar input,.toolbar select{background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--text);padding:9px 10px;min-height:39px;min-width:0}.toolbar input{flex:1}.toolbar select{max-width:46%;font-size:12px}
+.btn{border:0;border-radius:13px;background:var(--lime);color:#172117;font-weight:900;padding:12px 16px;transition:transform .15s,filter .2s}.btn:disabled{background:#414b44;color:#a0aaa2;opacity:.75;cursor:not-allowed}
+.secondary{border:1px solid var(--line);background:var(--panel);border-radius:11px;padding:9px 12px;font-weight:700}.datebar{display:flex;gap:7px;overflow:auto;padding:2px 0 9px;scrollbar-width:none}.datechip{white-space:nowrap;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px;color:var(--muted);font-size:12px;font-weight:750}.datechip.active{background:var(--green);border-color:var(--lime);color:var(--text)}
+.competition{background:var(--panel);border:1px solid var(--line);border-radius:15px;overflow:hidden;margin:12px 0;box-shadow:var(--shadow)}.competition-head{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-bottom:1px solid var(--line);font-size:12px;font-weight:850}.competition-head small{color:var(--muted);font-weight:600}.fixture{display:grid;grid-template-columns:48px minmax(0,1fr) 62px;gap:8px;align-items:center;padding:11px 12px;min-height:57px;cursor:pointer}.fixture:nth-child(even){background:var(--row1)}.fixture:nth-child(odd){background:var(--row2)}.fixture-time{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}.fixture-teams{min-width:0;font-size:13px;font-weight:750;line-height:1.35}.fixture-teams span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.fixture-arrow{text-align:right;color:var(--lime);font-size:17px}
+.empty{border:1px dashed var(--line);border-radius:15px;padding:23px 16px;text-align:center;color:var(--muted);background:var(--panel);font-size:13px}.empty strong{display:block;color:var(--text);font-size:15px;margin-bottom:5px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:14px;margin:10px 0}.pill{font-size:10px;border:1px solid var(--line);border-radius:99px;padding:4px 8px;color:var(--muted);font-weight:800}.note{font-size:12px;color:var(--muted);line-height:1.5}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.filterrow{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.filterchip{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:8px 11px;color:var(--muted);font-size:12px}.filterchip.active{border-color:var(--lime);background:var(--green);color:var(--text)}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:color-mix(in srgb,var(--panel) 95%,transparent);backdrop-filter:blur(20px);border-top:1px solid var(--line);padding:8px max(12px,env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.nav button{border:0;background:transparent;color:var(--muted);padding:7px 3px;border-radius:11px;font-size:10px;font-weight:750}.nav button span{display:block;font-size:18px;margin-bottom:2px}.nav button.active{background:var(--green);color:var(--text)}
+.remove{border:1px solid color-mix(in srgb,var(--red) 40%,transparent);background:transparent;color:var(--red);border-radius:9px;padding:6px 9px;font-size:11px;font-weight:800}.selection{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:11px 0;border-top:1px solid var(--line)}.selection-info{min-width:0}.selection-info b{display:block;font-size:13px}.selection-info small{color:var(--muted);font-size:11px}
+.analyze-wrap{display:flex;justify-content:center;margin:20px 0 8px}.analyze{width:min(100%,270px);min-height:48px;letter-spacing:.12em;font-size:13px}.analyze:disabled{background:#424b45;color:#aeb7b0}
+.metricgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.metric{background:var(--panel2);border-radius:12px;padding:13px}.metric b{display:block;font-size:22px}.metric small{color:var(--muted);font-size:11px}
+.modalback{position:fixed;inset:0;background:#0009;z-index:40;display:none;align-items:flex-end;justify-content:center;padding:12px}.modalback.show{display:flex}.modal{background:var(--panel);border:1px solid var(--line);border-radius:20px 20px 14px 14px;width:min(100%,560px);max-height:88vh;overflow:auto;padding:18px;animation:rise .2s ease}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.modal h2{margin:0;font-size:19px}.close{border:0;background:var(--panel2);border-radius:9px;padding:7px 10px}.fieldrow{margin:13px 0}.fieldrow label{display:block;font-size:11px;color:var(--muted);font-weight:800;margin-bottom:6px}.fieldrow input,.fieldrow select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--text);padding:11px}.oddlist{margin:12px 0}.oddline{display:grid;grid-template-columns:42px 1fr auto auto;gap:7px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.oddline small{color:var(--muted);font-size:10px}.oddline b{font-size:14px}.textbtn{border:0;background:transparent;color:var(--lime);font-weight:850;padding:6px}
+.verdict{border-radius:12px;padding:13px;background:var(--panel2);margin:12px 0}.verdict strong{display:block;font-size:13px;letter-spacing:.05em;margin-bottom:4px}.verdict p{margin:0;color:var(--muted);font-size:12px}.loadingdot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--lime);margin:0 3px;animation:pulse .8s infinite alternate}
+@keyframes rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}@keyframes pulse{to{opacity:.25;transform:scale(.7)}}
+@media(min-width:700px){.app{padding-left:22px;padding-right:22px}.fixture{grid-template-columns:65px minmax(0,1fr) 70px;padding:13px 16px}.fixture-teams{display:flex;gap:20px}.fixture-teams span{flex:1}}
+@media(max-width:380px){.brand{font-size:14px}.statusline{font-size:9px}.top-actions{gap:4px}.iconbtn{width:31px;height:31px}.toolbar select{max-width:43%;padding:8px 7px}.fixture{grid-template-columns:42px minmax(0,1fr) 18px}.fixture-teams{font-size:12px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="top">
+ <div class="brand"><div class="mark">⌁</div>BETRIX</div>
+ <div class="statusline"><i class="dot" id="statusDot"></i><span id="statusText">Waiting for match data</span></div>
+ <div class="top-actions"><button class="iconbtn" id="refreshBtn" aria-label="Refresh">↻</button><button class="iconbtn" id="settingsBtn" aria-label="Settings">⚙</button><button class="iconbtn helpbtn" id="helpBtn" aria-label="Help">?</button></div>
+</div></header>
+<main id="view"></main>
+</div>
+<nav class="nav">
+<button class="active" data-page="matchday"><span>◫</span>Matchday</button>
+<button data-page="catalyst"><span>✳</span>Catalyst</button>
+<button data-page="coupon"><span>▤</span>Coupon Lab</button>
+<button data-page="profile"><span>◉</span>Profile</button>
+</nav>
+<div class="modalback" id="modalBack"><div class="modal"><div class="modalhead"><h2 id="modalTitle">BETRIX</h2><button class="close" id="closeModal">✕</button></div><div id="modalBody"></div></div></div>
+<script>
+const $=s=>document.querySelector(s);
+const cachedEvents=(()=>{try{return JSON.parse(localStorage.getItem('betrix_cached_events')||'[]')}catch{return[]}})();
+const state={page:'matchday',events:cachedEvents,sports:[],loading:false,error:'',date:'today',search:'',league:'all',coupon:[],history:JSON.parse(localStorage.getItem('betrix_history')||'[]'),theme:localStorage.getItem('betrix_theme')||'dark',lastRefresh:null,couponAnalyzing:false};
+document.documentElement.classList.toggle('light',state.theme==='light');
+const savedKey=localStorage.getItem('oddsense_api_key')||localStorage.getItem('betrix_api_key')||'';
+const fmtTime=d=>new Date(d).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+const dayKey=d=>new Date(d).toLocaleDateString('en-CA');
+const todayKey=()=>dayKey(new Date());
+const tomorrowKey=()=>{const d=new Date();d.setDate(d.getDate()+1);return dayKey(d)};
+function setStatus(t,on=false){$('#statusText').textContent=t;$('#statusDot').classList.toggle('on',on)}
+function showPage(p){state.page=p;document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===p));render()}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+$('#settingsBtn').onclick=openSettings;$('#helpBtn').onclick=openHelp;$('#closeModal').onclick=closeModal;$('#modalBack').addEventListener('click',e=>{if(e.target===$('#modalBack'))closeModal()});$('#refreshBtn').onclick=refreshData;
+function openModal(title,html){$('#modalTitle').textContent=title;$('#modalBody').innerHTML=html;$('#modalBack').classList.add('show')}
+function closeModal(){$('#modalBack').classList.remove('show')}
+const helpCopy={
+ matchday:['Matchday','Browse available fixtures by date and competition. Bookmaker prices are hidden here to keep the fixture list clean. Tap a match to inspect its available 1X2 prices and add a selection to Coupon Lab.'],
+ catalyst:['Catalyst','Catalyst is designed to surface evidence-backed singles and accumulators, ranked mainly by the estimated chance that the entire coupon wins. It will also consider uncertainty, data quality, expected value and correlated selections. The statistical engine is still in development, so no picks are being fabricated.'],
+ coupon:['Coupon Lab','Build a coupon from Matchday selections. ANALYZE currently checks the selections and combined bookmaker odds only. It does not yet calculate a trustworthy win probability, expected value or correlation risk because the calibrated prediction model is not active.'],
+ profile:['Profile','This page records saved market snapshots and will eventually show model calibration, prediction history and performance. Model accuracy will be kept separate from personal betting returns. Metrics remain blank until real predictions and settled outcomes are tracked.']
+};
+function openHelp(){const [title,body]=helpCopy[state.page];openModal(title,`<p class="note" style="font-size:13px">${body}</p>`)}
+function openSettings(){openModal('Settings',`
+<div class="fieldrow"><label>THE ODDS API KEY</label><input id="apiKey" type="password" autocomplete="off" placeholder="Paste your API key" value="${savedKey.replace(/"/g,'&quot;')}"><p class="note">Your existing key is preserved in this browser. Never share it in chat or screenshots.</p></div>
+<div class="row"><button class="btn" id="saveKey">Save key</button><button class="secondary" id="testKey">Connect & refresh</button></div>
+<div class="fieldrow"><label>APPEARANCE</label><select id="themeSelect"><option value="dark" ${state.theme==='dark'?'selected':''}>Dark forest</option><option value="light" ${state.theme==='light'?'selected':''}>Light</option></select></div>
+<div class="fieldrow"><label>ODDS FORMAT</label><select disabled><option>Decimal</option></select></div>
+<p class="note">BETRIX refreshes only when you ask it to. Advanced statistical forecasts and Catalyst generation are still in development.</p>`);
+$('#saveKey').onclick=()=>{const k=$('#apiKey').value.trim();if(k)localStorage.setItem('oddsense_api_key',k);else localStorage.removeItem('oddsense_api_key');setStatus(k?'API key saved':'No API key saved');closeModal()};
+$('#testKey').onclick=async()=>{const k=$('#apiKey').value.trim();if(!k){alert('Add your API key first.');return}localStorage.setItem('oddsense_api_key',k);closeModal();await refreshData()};
+$('#themeSelect').onchange=e=>{state.theme=e.target.value;localStorage.setItem('betrix_theme',state.theme);document.documentElement.classList.toggle('light',state.theme==='light')};
+}
+async function refreshData(){
+ const key=localStorage.getItem('oddsense_api_key')||localStorage.getItem('betrix_api_key');
+ if(!key){openSettings();setStatus('Add your API key to load matches');return}
+ if(state.loading)return;
+ state.loading=true;state.error='';setStatus('Refreshing match data…');render();
+ const readError=async r=>{let body='';try{body=await r.text()}catch{};try{const j=JSON.parse(body);return j.message||j.error||body.slice(0,180)}catch{return body.slice(0,180)||r.statusText||'No details supplied'}};
+ try{
+  const sr=await fetch('https://api.the-odds-api.com/v4/sports/?apiKey='+encodeURIComponent(key));
+  if(!sr.ok)throw new Error(`API rejected the sports request (${sr.status}): ${await readError(sr)}`);
+  const sports=await sr.json();
+  if(!Array.isArray(sports))throw new Error('The API returned an unexpected sports list.');
+  state.sports=sports.filter(s=>s.active&&(/soccer/i.test(s.group||'')||/^soccer_/i.test(s.key||'')));
+  if(!state.sports.length)throw new Error('Your API key works, but no active soccer competitions are available on this API account.');
+  const failures=[];
+  const chunks=await Promise.all(state.sports.map(async s=>{
+   try{
+    const r=await fetch(`https://api.the-odds-api.com/v4/sports/${encodeURIComponent(s.key)}/odds/?apiKey=${encodeURIComponent(key)}&regions=eu&markets=h2h&oddsFormat=decimal`);
+    if(!r.ok){failures.push(`${s.title||s.key}: HTTP ${r.status} ${await readError(r)}`);return[]}
+    const data=await r.json();
+    if(!Array.isArray(data)){failures.push(`${s.title||s.key}: unexpected API response`);return[]}
+    return data.map(e=>({...e,leagueName:s.title||s.key}));
+   }catch(e){failures.push(`${s.title||s.key}: ${e.message||'network error'}`);return[]}
+  }));
+  const map=new Map();chunks.flat().forEach(e=>map.set(e.id,e));
+  const fresh=[...map.values()].sort((a,b)=>new Date(a.commence_time)-new Date(b.commence_time));
+  if(fresh.length){
+   state.events=fresh;
+   localStorage.setItem('betrix_cached_events',JSON.stringify(fresh));
+   state.lastRefresh=new Date();state.error='';
+   setStatus(`${fresh.length} matches · ${fmtTime(state.lastRefresh)}`,true);
+  }else if(failures.length){
+   throw new Error(`The API found ${state.sports.length} soccer competitions, but odds requests failed. ${failures.slice(0,2).join(' | ')}`);
+  }else{
+   state.error='The API connected, but returned no football matches with available 1X2 odds right now.';
+   setStatus('Connected · no available odds',true);
+  }
+ }catch(e){
+  state.error=e.message||'Could not load matches';
+  setStatus(state.events.length?`Showing saved matches · refresh failed`:'API connection issue',false);
+ }finally{state.loading=false;render()}
+}
+function bestPrices(ev){const out={home:[],draw:[],away:[]};(ev.bookmakers||[]).forEach(b=>(b.markets||[]).filter(m=>m.key==='h2h').forEach(m=>(m.outcomes||[]).forEach(o=>{let k=o.name===ev.home_team?'home':o.name===ev.away_team?'away':'draw';if(k==='draw'&&o.name.toLowerCase()!=='draw')return;out[k].push({price:o.price,book:b.title})})));return Object.fromEntries(Object.entries(out).map(([k,v])=>[k,v.sort((a,b)=>b.price-a.price)]))}
+function dateName(d){const t=todayKey(),tom=tomorrowKey();if(d===t)return'TODAY';if(d===tom)return'TOMORROW';return new Date(d+'T12:00:00').toLocaleDateString([],{weekday:'short',day:'numeric',month:'short'}).toUpperCase()}
+function renderMatchday(){
+ const dates=[...new Set(state.events.map(e=>dayKey(e.commence_time)))];
+ const target=state.date==='today'?todayKey():state.date==='tomorrow'?tomorrowKey():state.date;
+ const leagues=[...new Set(state.events.map(e=>e.leagueName))].sort();
+ const list=state.events.filter(e=>(state.date==='upcoming'?dayKey(e.commence_time)>tomorrowKey():dayKey(e.commence_time)===target)&&(state.league==='all'||e.leagueName===state.league)&&(`${e.home_team} ${e.away_team} ${e.leagueName}`).toLowerCase().includes(state.search.toLowerCase()));
+ const groups={};list.forEach(e=>(groups[e.leagueName||'Football']??=[]).push(e));
+ return `<div class="datebar"><button class="datechip ${state.date==='today'?'active':''}" data-date="today">Today</button><button class="datechip ${state.date==='tomorrow'?'active':''}" data-date="tomorrow">Tomorrow</button><button class="datechip ${state.date==='upcoming'?'active':''}" data-date="upcoming">Upcoming</button>${dates.filter(d=>d!==todayKey()&&d!==tomorrowKey()).slice(0,4).map(d=>`<button class="datechip ${state.date===d?'active':''}" data-date="${d}">${dateName(d)}</button>`).join('')}</div>
+ <div class="toolbar"><input id="matchSearch" placeholder="Search matches…" value="${state.search.replace(/"/g,'&quot;')}"><select id="leagueFilter"><option value="all">All competitions</option>${leagues.map(l=>`<option value="${l.replace(/"/g,'&quot;')}" ${state.league===l?'selected':''}>${l}</option>`).join('')}</select></div>
+ ${state.loading?'<div class="empty">Refreshing match data…</div>':''}
+ ${!state.events.length&&!state.loading?`<div class="empty"><strong>${state.error?'Could not load matches':'No match data yet'}</strong>${state.error||'Connect The Odds API in Settings, then refresh to load available fixtures.'}<p><button class="btn" id="connectBtn">Connect data</button></p></div>`:''}
+ ${Object.entries(groups).map(([league,events])=>`<section class="competition"><div class="competition-head"><span>${league}</span><small>${events.length} ${events.length===1?'MATCH':'MATCHES'}</small></div>${events.map(e=>`<div class="fixture" data-event="${e.id}"><span class="fixture-time">${fmtTime(e.commence_time)}</span><div class="fixture-teams"><span>${e.home_team}</span><span>${e.away_team}</span></div><span class="fixture-arrow">›</span></div>`).join('')}</section>`).join('')}
+ ${state.events.length&&!list.length?'<div class="empty">No fixtures match those filters.</div>':''}
+ ${state.loading?'':!state.events.length?'':'<p class="note">Bookmaker prices are shown inside each match. Coverage depends on The Odds API and your plan.</p>'}`;
+}
+function renderCatalyst(){return `<div class="empty"><strong>No qualified Catalysts yet</strong>The analysis engine is still being built. BETRIX will only publish selections when the data and model support them.</div>`}
+function renderCoupon(){
+ const combined=state.coupon.reduce((a,x)=>a*Number(x.odds||1),1);
+ return `<section class="panel"><div class="row" style="justify-content:space-between"><b>Your selections</b><span class="pill">${state.coupon.length}</span></div>
+ ${state.coupon.length?state.coupon.map((x,i)=>`<div class="selection"><div class="selection-info"><b>${x.match}</b><small>${x.pick} · ${x.odds}</small></div><button class="remove" data-remove="${i}">Remove</button></div>`).join(''):'<p class="note">Add a selection from Matchday by opening a match and choosing a market outcome.</p>'}
+ ${state.coupon.length?`<div class="row" style="justify-content:space-between;padding-top:10px"><span class="note">Combined decimal odds</span><b>${combined.toFixed(2)}</b></div>`:''}
+ </section>
+ <div class="analyze-wrap"><button class="btn analyze" id="analyzeBtn" ${state.coupon.length?'':'disabled'}>ANALYZE</button></div>
+ <div id="analysisResult"></div>`;
+}
+function renderProfile(){const n=state.history.length;return `<div class="metricgrid"><div class="metric"><b>${n}</b><small>Saved market snapshots</small></div><div class="metric"><b>—</b><small>Prediction accuracy</small></div><div class="metric"><b>—</b><small>Settled coupons</small></div><div class="metric"><b>—</b><small>Actual ROI</small></div></div><section class="panel"><b>Prediction history</b>${n?state.history.slice().reverse().map(x=>`<div class="selection"><div class="selection-info"><b>${x.match}</b><small>${x.date} · ${x.pick} · ${x.odds}</small></div></div>`).join(''):'<p class="note">Saved market snapshots will appear here. Prediction accuracy and ROI remain blank until real forecasts and settled results are tracked.</p>'}</section><section class="panel"><div class="row" style="justify-content:space-between"><b>BETRIX Intelligence Report</b><span class="pill">IN DEVELOPMENT</span></div><p class="note">Planned: probability calibration, strongest and weakest markets, performance by competition, and confidence reliability. Model performance stays separate from personal betting returns.</p></section>`}
+function render(){
+ const v=$('#view');v.innerHTML=state.page==='matchday'?renderMatchday():state.page==='catalyst'?renderCatalyst():state.page==='coupon'?renderCoupon():renderProfile();
+ $('#connectBtn')?.addEventListener('click',openSettings);
+ $('#matchSearch')?.addEventListener('input',e=>{state.search=e.target.value;const pos=e.target.selectionStart;render();const el=$('#matchSearch');el.focus();el.setSelectionRange(pos,pos)});
+ $('#leagueFilter')?.addEventListener('change',e=>{state.league=e.target.value;render()});
+ document.querySelectorAll('[data-date]').forEach(b=>b.addEventListener('click',()=>{state.date=b.dataset.date;render()}));
+ document.querySelectorAll('[data-event]').forEach(b=>b.addEventListener('click',()=>showInsight(b.dataset.event)));
+ document.querySelectorAll('[data-remove]').forEach(b=>b.addEventListener('click',()=>{state.coupon.splice(Number(b.dataset.remove),1);render()}));
+ $('#analyzeBtn')?.addEventListener('click',analyzeCoupon);
+}
+function showInsight(id){
+ const ev=state.events.find(e=>e.id===id);if(!ev)return;const p=bestPrices(ev);
+ const opts=[['1','Home',p.home[0]],['X','Draw',p.draw[0]],['2','Away',p.away[0]]].filter(x=>x[2]);
+ openModal('Match details',`<div class="note">${ev.leagueName||'Football'} · ${new Date(ev.commence_time).toLocaleString()}</div><h2 style="margin:7px 0">${ev.home_team} vs ${ev.away_team}</h2><div class="oddlist"><b>Best available 1X2 prices</b>${opts.map(([symbol,name,o])=>`<div class="oddline"><b>${symbol}</b><span>${name}<br><small>${o.book}</small></span><b>${o.price.toFixed(2)}</b><button class="textbtn" data-add="${name}" data-odds="${o.price}">Add</button></div>`).join('')}</div><p class="note">These are bookmaker prices, not BETRIX predictions. The statistical Mini-Catalyst is not active yet.</p>`);
+ $('#modalBody').querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{state.coupon.push({match:ev.home_team+' vs '+ev.away_team,pick:b.dataset.add,odds:b.dataset.odds});closeModal();showPage('coupon')});
+ const save=document.createElement('button');save.className='secondary';save.textContent='Save market snapshot';save.onclick=()=>{state.history.push({match:ev.home_team+' vs '+ev.away_team,pick:'Market snapshot',odds:opts.map(x=>x[2].price.toFixed(2)).join(' / '),date:new Date().toLocaleString()});localStorage.setItem('betrix_history',JSON.stringify(state.history));closeModal();};$('#modalBody').appendChild(save);
+}
+async function analyzeCoupon(){
+ if(!state.coupon.length||state.couponAnalyzing)return;
+ const b=$('#analyzeBtn'),result=$('#analysisResult');state.couponAnalyzing=true;b.disabled=true;result.innerHTML='<div class="empty"><span class="loadingdot"></span><span class="loadingdot"></span><span class="loadingdot"></span><p>Checking your selections…</p></div>';
+ await new Promise(r=>setTimeout(r,650));
+ const odds=state.coupon.reduce((a,x)=>a*Number(x.odds||1),1);
+ const unique=new Set(state.coupon.map(x=>x.match+'|'+x.pick)).size;
+ const duplicates=unique!==state.coupon.length;
+ result.innerHTML=`<div class="verdict"><strong>${duplicates?'RETHINK':'MARKET SNAPSHOT READY'}</strong><p>${duplicates?'Your coupon contains duplicate selections. Review them before proceeding.':'Your selections are listed and the combined bookmaker price has been calculated.'}</p></div><div class="panel"><div class="row" style="justify-content:space-between"><span class="note">Selections</span><b>${state.coupon.length}</b></div><div class="row" style="justify-content:space-between"><span class="note">Combined decimal odds</span><b>${odds.toFixed(2)}</b></div><p class="note" style="margin-bottom:0">This is not a probability or value assessment. BETRIX does not yet have the calibrated model needed to estimate the chance of this coupon winning, expected value or selection correlation.</p></div>`;
+ state.couponAnalyzing=false;b.disabled=false;
+}
+render();if(savedKey){setStatus(state.events.length?'Showing saved matches · updating…':'Loading matches…',false);refreshData();}
+</script>
+</body>
+</html>
